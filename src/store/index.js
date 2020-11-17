@@ -1,79 +1,55 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Mock from 'mockjs'
-import axios from 'axios'
 
 Vue.use(Vuex)
 
-let studentList = []
-let teacherList = []
 
-const myVuex = new Vuex.Store({
+export default new Vuex.Store({
   state: {
-    curPath: '个人中心/个人信息',
-    studentList: [],
-    teacherList: []
+    curSeat: "",
+    seatData: (function () {
+      var list = []
+      for (let i = 0; i < Math.floor(Math.random() * 140); i++) {
+        list.push(Math.floor(Math.random() * 200 + 1))
+      }
+      console.log(list)
+      return list
+    })(),
   },
   mutations: {
-    changePath(state, param) {
-      return state.curPath = param
+
+    // 当前选择的餐桌
+    changeCurSeat(state, index) {
+      state.curSeat = index
     },
 
-    // 创建学生
-    createStudent(state, param) {
-      return state.studentList = param
+    // 修改餐桌列表
+    deleteSeatData(state, index) {
+      state.seatData.splice(index, 1)
     },
 
-    // 编辑学生
-    editStudent(state, param) {
-      state.studentList.splice(param.index, 1, param.form)
+    // 修改餐桌列表
+    changeSeatData(state, params) {
+      state.seatData.splice(params.index, 1, params.data)
     },
 
-    // 删除学生
-    deleteStudent(state, param) {
-      return state.studentList.splice(param.index,1)
-    },
-
-    // 创建老师
-    createTeacher(state, param) {
-      return state.teacherList = param
-    },
-
-    // 编辑老师
-    editTeacher(state, param) {
-      
-      state.teacherList.splice(param.index, 1, param.form)
-    },
-
-    // 删除老师
-    deleteTeacher(state, param) {
-      return state.teacherList.splice(param.index,1)
+    addSeat(state, seatId){
+      state.seatData.unshift(seatId)
     }
+
   },
   actions: {
-    changePathFun(context, param) {
-      return context.commit('changePath', param)
+    changeCurSeatFun(context, index) {
+      context.commit('changeCurSeat', index)
     },
-
-    createStudentFun(context, param) {
-      return context.commit('createStudent', param)
+    deleteSeatDataFun(context, index) {
+      context.commit('deleteSeatData', index)
     },
-
-    editStudentFun(context, param) {
-      return context.commit('editStudent', param)
+    changeSeatDataFun(context, params) {
+      context.commit('changeSeatData', params)
     },
-    deleteStudentFun(context, param) {
-      return context.commit('deleteStudent', param)
-    },
-    createTeacherFun(context, param) {
-      return context.commit('createTeacher', param)
-    },
-
-    editTeacherFun(context, param) {
-      return context.commit('editTeacher', param)
-    },
-    deleteTeacherFun(context, param) {
-      return context.commit('deleteTeacher', param)
+    addSeatFun(context, params) {
+      context.commit('addSeat', params)
     },
   },
   modules: {
@@ -81,62 +57,3 @@ const myVuex = new Vuex.Store({
   }
 })
 
-export default myVuex
-
-getStudentData()
-function getStudentData() {
-  let that = this
-
-  let mockTableData = Mock.mock({
-    status: 200,
-    'data|5-30': [
-      {
-        'id|+1': 1,
-        name: '@cname',
-        date: '@date("yyyy-MM-dd")',
-        address: '@county(true)',
-        'sex|0-1': 0,
-        'studentId|500000000-599999999': 500000000,
-      },
-    ],
-  })
-
-  Mock.mock('/getStudentData', {
-    data: mockTableData,
-  })
-
-  axios.get('/getStudentData').then((res) => {
-    studentList = res.data.data.data
-    myVuex.dispatch('createStudentFun', studentList)
-
-  })
-}
-
-getTeacherData()
-function getTeacherData() {
-  let that = this
-
-  let mockTableData = Mock.mock({
-    status: 200,
-    'data|5-30': [
-      {
-        'id|+1': 1,
-        name: '@cname',
-        'teachYear|0-20': 3,
-        address: '@county(true)',
-        'sex|0-1': 0,
-        teacherId: 'T-' + '@integer(10001, 99999)',
-      },
-    ]
-  })
-
-  Mock.mock('/getTeacherData', {
-    data: mockTableData,
-  })
-
-  axios.get('/getTeacherData').then((res) => {
-    teacherList = res.data.data.data
-    myVuex.dispatch('createTeacherFun', teacherList)
-
-  })
-}

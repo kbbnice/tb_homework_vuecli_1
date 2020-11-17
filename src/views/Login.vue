@@ -9,7 +9,7 @@
             <input
               type="text"
               id="uname"
-              placeholder="username"
+              placeholder="please enter your name"
               v-model="formData.username"
             />
           </div>
@@ -19,23 +19,21 @@
             <input
               type="password"
               id="pwd"
-              placeholder="password"
+              placeholder="please enter password"
               v-model="formData.password"
             />
           </div>
         </div>
 
         <!-- 登录 -->
-        <div class="login-btn" @click="submit()">登&nbsp;录</div>
+        <div class="login-btn" @click="submit()">LOGIN</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// 背景
-
-// api
+import { fetchLogin } from "@/api/modules/login.js";
 
 export default {
   name: "login",
@@ -53,39 +51,27 @@ export default {
     submit() {
       let that = this;
 
-      // Mock
-      that.Mock.mock("/login", {
-        userInfo: {
-          id: 1,
-          name: "user",
-        },
-        state: "success",
-      });
+      fetchLogin({}).then((res) => {
+        // 登录成功：
 
-      //  登录请求
-      that.axios
-        .post("/login", {
-          username: that.formData.username,
-          password: that.formData.password,
-        })
-        .then((res) => {
-          // 登录成功：
-          if (res.data.state === "success") {
-            that.setStorage('userInfo', res.data.userInfo)
-            that.$message({
-              message: "登录成功",
-              type: "success",
-            });
-            setTimeout(() => {
-              that.$router.push("/");
-            }, 500);
-          } else {
-            that.$message({
-              message: "登录失败",
-              type: "error",
-            });
-          }
-        });
+        if (res.status == 200) {
+          that.setStorage("userInfo", res.data.userInfo);
+
+          console.log(res)
+          that.$message({
+            message: "登录成功",
+            type: "success",
+          });
+          setTimeout(() => {
+            that.$router.push("/");
+          }, 500);
+        } else {
+          that.$message({
+            message: "登录失败",
+            type: "error",
+          });
+        }
+      });
     },
 
     // 设置 localstorage:
@@ -106,7 +92,7 @@ export default {
     top: 0;
     bottom: 0;
     overflow-y: scroll;
-    background: #5f35d1;
+    background: #555555;
     z-index: 2;
     .login-title {
       color: #fff;
@@ -118,7 +104,7 @@ export default {
     }
     .login-box {
       background: rgba(255, 255, 255, 0.7);
-      border-radius: 5px;
+      border-radius: 15px;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -137,8 +123,12 @@ export default {
             border: none;
             background: transparent;
             border-bottom: 1px solid #999;
+            box-shadow: 0 0 10px #000 inset;
+            border-radius: 14px;
+            line-height: 60px;
+            text-align: center;
             &:focus {
-              border-bottom: 1px solid #5f35d1;
+              border-bottom: 1px solid #555555;
             }
           }
         }
@@ -146,7 +136,7 @@ export default {
 
       .login-btn {
         margin: 0 auto;
-        background: #5f35d1;
+        background: #555555;
         color: #fff;
         box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
         text-align: center;

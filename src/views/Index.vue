@@ -6,7 +6,8 @@
       </el-aside>
       <el-container>
         <el-header>
-          <MyBread></MyBread>
+          <span class="title">餐饮管理</span>
+          <span class="logout" @click="logout">logout</span>
         </el-header>
         <el-main>
           <router-view></router-view>
@@ -18,23 +19,18 @@
 
 <script>
 import Menu from "@/components/Menu.vue";
-import MyBread from "@/components/MyBread.vue";
 
 export default {
   name: "Home",
   components: {
     Menu,
-    MyBread
   },
   methods: {
-
+    logout() {
+      this.$router.push("/login");
+    },
   },
-  created() {
-    let that = this
-    window.onload = function() {
-      that.$router.push('/settings/info')
-    }
-  },
+  created() {},
 };
 </script>
 
@@ -48,9 +44,23 @@ export default {
   top: 0;
   height: 60px;
   // border-bottom: 1px solid #ccc;
-  background: #fff;
-  /deep/ .el-breadcrumb{
+  background: #ddd;
+  .title {
+    color: #555;
+    font-size: 36px;
+  }
+  .logout {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 60px;
     line-height: 60px;
+    padding: 0 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    &:hover {
+      background: #999;
+    }
   }
 }
 
@@ -64,7 +74,7 @@ export default {
   bottom: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: #5f35d1;
+  background-color: #555555;
 }
 
 .el-main {

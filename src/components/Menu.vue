@@ -1,28 +1,43 @@
 <template>
   <div class="my-menu">
     <el-menu
-      :default-active="pathList[1].children[1].path"
+      :default-active="defaultActive"
       class="el-menu-vertical-demo"
-      background-color="#5f35d1"
+      background-color="#555555"
       text-color="#fff"
-      active-text-color="rgb(126, 189, 255)"
+      active-text-color="#999"
       :unique-opened="true"
+      :router="true"
     >
-      <el-submenu v-for="(subList, subIndex) in pathList" :key="subList.uid" :index="subList.path">
+      <el-submenu index="/seat">
         <template slot="title">
-          <i class="el-icon-menu"></i>
-          <span>{{ subList.name }}</span>
+          <i class="el-icon-food"></i>
+          <span>餐桌管理</span>
         </template>
 
-        <el-menu-item
-          :index="item.path"
-          v-for="(item, index) in subList.children"
-          :key="item.id"
-          @click="handleSelect(subIndex, index)"
-        >
+        <el-menu-item index="/seat/list">
           <template slot="title">
-            <i class="el-icon-menu"></i>
-            <span>{{ item.name }}</span>
+            <i class="el-icon-food"></i>
+            <span>餐桌列表</span>
+          </template>
+        </el-menu-item>
+        <el-menu-item index="/seat/add">
+          <template slot="title">
+            <i class="el-icon-food"></i>
+            <span>添加餐桌</span>
+          </template>
+        </el-menu-item>
+      </el-submenu>
+      <el-submenu index="/center">
+        <template slot="title">
+          <i class="el-icon-food"></i>
+          <span>店铺管理</span>
+        </template>
+
+        <el-menu-item index="/center/info">
+          <template slot="title">
+            <i class="el-icon-food"></i>
+            <span>店铺信息</span>
           </template>
         </el-menu-item>
       </el-submenu>
@@ -34,76 +49,16 @@
 export default {
   data() {
     return {
-      pathList: [
-        // {
-        //   path: '/course',
-        //   name: '课程管理',
-        //   children: [
-        //     {
-        //       name: '必修课',
-        //       path: '/required',
-        //     },
-        //     {
-        //       name: '选修课',
-        //       path: '/elective',
-        //     },
-        //   ],
-        // },
-        {
-          path: '/member',
-          name: '成员管理',
-          children: [
-            {
-              name: '老师管理',
-              path: '/teacher',
-            },
-            {
-              name: '学生管理',
-              path: '/student',
-            },
-          ],
-        },
-         {
-          path: '/settings',
-          name: '个人中心',
-          children: [
-            {
-              name: '密码修改',
-              path: '/password',
-            },
-            {
-              name: '个人信息',
-              path: '/info',
-            },
-          ],
-        },
-      ],
-    }
+      defaultActive: '/seat/list'
+    };
   },
-  methods: {
-    handleSelect(subIndex, index) {
-      this.$router.push(this.getPath(subIndex, index))
-      this.$store.dispatch('changePathFun', this.getName(subIndex, index))
-    },
+  methods: {},
+  mounted() {
 
-    // 获取跳转路由
-    getPath(subIndex, index) {
-      return (
-        this.pathList[subIndex].path +
-        this.pathList[subIndex].children[index].path
-      )
-    },
-
-    // 获取课程名称
-    getName(subIndex, index) {
-      return (
-        this.pathList[subIndex].name +
-        '/' +
-        this.pathList[subIndex].children[index].name
-      )
-    },
-  },
-}
+    // 刷新页面时能让菜单定位到当前的路由
+    this.defaultActive = this.$route.path
+  }
+};
 </script>
 
 <style lang="less">
